@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>York Region COVID-19 Cases as of (August 31, 2020)</title>
+<style>
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.chart {
+	float: left
+	display: table-cell;
+}
+.chart path {
+	stroke: #777;
+	stroke-width: 0.1px;
+}
+.chart .labels {
+	fill: #aaa;
+	letter-spacing: -1px;
+}
+.chart .labels.segment {
+	font-size: 10px;
+}
+.legendContainer {
+	margin-left: 20px;
+	padding-left: 20px;
+	display: table-cell;
+	vertical-align: middle;
+}
+.legendTitle {
+    font-weight: bold;
+	padding-bottom: 5px;
+}
+.legend svg {
+	padding: 6px;
+    font-size: 12px;
+}
+
+.legendContainer {
+	height: 412;
+}
+.legend svg {
+	width: 200px;
+	height: 300px;
+}
+#chart svg {
+	height: 412px;
+	width: 412px;
+}
+
+</style>
+
+</head>
+<body>
+<h2>York Region COVID-19 Cases as of (August 31, 2020)</h2>
+<div style="display: table;">
+<div class="chart" id="chart"></div>
+<div class="legendContainer" id="legendContainer">
+<div class="legendTitle" id="legendTitle"></div>
+<div class="legend" id="legend"></div>
+</div>
+</div>
+<div class="info" id="info"></div>
+<script src="d3.min.js" type="text/JavaScript"></script>
+<script src="circularHeatChart.js" type="text/JavaScript"></script>
+<script>
+var segHeight=16;
+var segCnt=12;
+var bandCnt=10;
+var segLabels=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var bandLabels=['Aurora', 'East Gwillimbury', 'Georgina', 'King', 'Markham', 'Newmarket', 'Other', 'Richmond Hill', 'Vaughan', 'Whitchurch-Stouffville'];
+var innerRadius=25;
+var edata=[null,null,11,62,30,13,23,6,null,null,null,null,null,null,4,33,19,10,4,2,null,null,null,null,null,null,1,50,82,21,10,2,null,null,null,null,null,null,7,14,10,13,6,5,null,null,null,null,null,null,64,290,163,143,59,45,null,null,null,null,null,null,16,124,67,26,15,13,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,1,39,113,90,73,40,39,null,null,null,null,null,null,125,511,396,261,132,72,null,null,null,null,null,null,10,27,28,10,11,9,null,null,null,null];
+var startColor="#ffffff";
+var endColor="#0044ff";
+var noDataColor="#f0f0f0";
+var chart = circularHeatChart()
+	.range([startColor,endColor])
+	.nullColor(noDataColor)
+	.segmentHeight(segHeight)
+	.innerRadius(innerRadius)
+	.numSegments(segCnt)
+	.segmentLabels(segLabels)
+	.radialLabels(bandLabels)
+	.legDivId("legend")
+	.legendSettings({width: 200, height: 300, legBlockWidth: 30})
+	.data(edata)
+;
+d3.select('#chart')
+	.selectAll('svg')
+	.data([edata])
+	.enter()
+	.append('svg')
+	.call(chart);
+d3.selectAll("#chart path").on('mouseover', function() {
+	var d = d3.select(this).data();
+	d3.select("#info").text('COVID-19 Case Count: ' + d);
+});
+d3.select("#legendTitle").html("Legend");
+
+</script>
+</body>
+</html>
+
